@@ -3,14 +3,15 @@
 *::after{box-sizing: border-box;}
 *::before{box-sizing: border-box;}
 ul,ol{list-style: none;}
-a{color: inherit;text-decoration: none}
+a{color: inherit;text-decoration: none;}
 /* 对于按标签设置其颜色为隐藏的颜色，父元素什么颜色，a标签就是什么颜色，并且不要下划线*/
+input{font: inherit}
+*{outline: none}
+/* 让input中的属性进行继承，也就是input中的输入的内容的样式会得到继承 */
 body{
     font-size: 12px;
     line-height: 1.5;
-
 }
-
 
 /* layout */
 
@@ -21,16 +22,15 @@ body{
 }
 .page > aside{
     width: 200px;
-    border: 1px solid red;
     display: flex;
     flex-direction: column;
 }
 .page > main{
     flex-grow: 1;
-    border: 1px solid green;
 }
 
 /* aside */
+
 .page aside > .newSong{
     text-align: center;
     padding: 10px;
@@ -53,9 +53,7 @@ body{
 .page aside .songList > div.active{
     background: #4d4b4b4d;
 }
-.page aside .uploadArea{
 
-}
 .draggable {
     text-align: center;
     border-radius: 4px;
@@ -73,4 +71,47 @@ body{
     /* 宽度与父元素的宽度一样 */
     padding: 20px 20px;
     /* 这里的padding撑起了父元素的高度,所以这里的按钮宽度和拖拽区域宽高都被子元素的padding撑起来了 */
+}
+
+
+/* main */
+
+.page > main {
+    padding-top: 20px;
+    background-color: #4d4d4d4d;
+    padding-left: 20px;
+}
+.form{
+    font-size: 14px;
+}
+.form input[type=text]{
+    /* 对input中输入的内容设置样式 */
+    padding: 3px 8px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    height: 30px;
+}
+.form > .row{
+    margin: 20px 0;
+    display: flex;
+}
+.form > .row > label{
+    width: 4em;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-right: 5px;
+}
+.form > .row.actions{
+    margin-left: calc(4em + 5px);
+    /* 这里就是设计按钮与上面的输入框进行左对齐 */
+}
+.form input[type=button],
+.form input[type=submit],
+.form button{
+    height: 30px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 5px;
+    background-color: white;
 }
