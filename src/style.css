@@ -38,19 +38,21 @@ body{
 .page aside > .newSong.active{
     background: #4d4b4b4d;
 }
-.page aside .songList{
+#songList-container{
     flex-grow: 1;
+}
+.page aside .songList{
     /* 加上上面一句就能实现songList自动的向两边延伸，延伸后的话，歌单和长传区域就能分开了。 */
     text-align: left;
     border-top: 1px solid rgb(103, 105, 107);
 }
-.page aside .songList div > li{
+.page aside .songList li{
     padding: 10px;
     border-bottom: 1px solid #ddd;
     margin-left: 10px;
     margin-right: 10px;
 }
-.page aside .songList > div.active{
+.page aside .songList > li.active{
     background: #4d4b4b4d;
 }
 
