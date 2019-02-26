@@ -18,8 +18,12 @@
             window.eventHub.on('upload',(data)=>{
                 this.active()
             })
-            window.eventHub.on('select',(id)=>{
+            window.eventHub.on('select',(data)=>{
                 this.deactive()
+            })
+            $(this.view.el).on('click',()=>{
+                this.active()
+                window.eventHub.emit('new')
             })
         },
         active(){
