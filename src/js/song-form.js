@@ -76,22 +76,19 @@
             this.model =model
             this.view.render(this.model.data)
             this.bindEvents()
-            window.eventHub.on('upload',(data)=>{
-                this.model.data = data
-                this.reset(this.model.data)//一旦发现订阅的数据发生了变化之后就将调用reset函数
-            })
             window.eventHub.on('select',(data)=>{
                 this.view.render(data)
             })
-            window.eventHub.on('new',()=>{
-                this.model.data={
-                    name: '',singer: '',url: '',id: ''
+            window.eventHub.on('new',(data)=>{          
+                if(this.model.data.id){
+                    this.model.data = {
+                        name: '',singer: '',url: '',id: ''
+                    }
+                }else{
+                    Object.assign(this.model.data,data)
                 }
                 this.view.render(this.model.data)
             })
-        },
-        reset(data){
-            this.view.render(data)//reset函数的主要内容就是将得到的数据放到render中进行渲染页面
         },
         bindEvents(){
             this.view.$el.on('submit','form',(e)=>{
