@@ -117,3 +117,47 @@ body{
     border-radius: 5px;
     background-color: white;
 }
+
+/* loading */
+@keyframes loading{
+    0%{
+        transform:scale(1);
+    }
+    100%{
+        transform:scale(0.1);
+    }
+}
+.set-loading{
+    visibility: hidden;
+    position: fixed;
+    top:0;
+    left: 0;
+    /* 到最顶部和左边的距离为0 */
+    background-color: rgba(0,0,0,0.2);
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+.set-loading.active{
+    visibility: visible;
+}
+.set-loading::before{
+    content: '';
+    display: block;
+    position: absolute;
+    height: 100px;
+    width: 100px;
+    background: green;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    margin-top: -50px;
+    margin-left: -50px;
+    /* 由于这个圆圈的长宽是100px，所以在进行居中的时候使用-50px */
+    animation: loading 1s infinite alternate-reverse;
+    animation-timing-function: linear;
+    /* 指定动画进行变化的时候通过以上指定的变化的动作，做animation操作，具体的话可以看MDN
+    loading是指定的操作变化，infinite表示无限的循环，alternate-reverse表示动作的反动
+    linear表示进行线性变化，但是这些属性的填写有顺序，具体的顺序需要看MDN
+    */
+}

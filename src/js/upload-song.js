@@ -40,6 +40,7 @@
                     },
                     'BeforeUpload': function (up, file) {
                         // 每个文件上传前,处理相关的事情
+                        window.eventHub.emit('beforeUploading')
                     },
                     'UploadProgress': function (up, file) {
 
@@ -64,6 +65,7 @@
                             url: sourceLink,
                             name:response.key
                         })
+                        window.eventHub.emit('afterUploading')
                     },
                     'Error': function (up, err, errTip) {
                         //上传出错时,处理相关的事情
