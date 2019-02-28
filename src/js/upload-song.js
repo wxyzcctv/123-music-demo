@@ -6,7 +6,11 @@
         }
     }
     
-    let model = {}
+    let model = {
+        data:{
+            statues: 'open'
+        }
+    }
     let controller = {
         init(view, model) {
             this.view = view
@@ -38,16 +42,22 @@
                             console.log(file.name);
                         });
                     },
-                    'BeforeUpload': function (up, file) {
+                    'BeforeUpload': (up, file) => {
                         // 每个文件上传前,处理相关的事情
                         window.eventHub.emit('beforeUploading')
+                        if(this.model.data.statues === 'close'){
+                            return false
+                        }else{
+                            this.model.data.statues = 'close'
+                            return true
+                        }
                     },
                     'UploadProgress': function (up, file) {
 
                         // 每个文件上传时,处理相关的事情
                     },
                     //表示文件上传之后调用FileUploaded
-                    'FileUploaded': function (up, file, info) {
+                    'FileUploaded':  (up, file, info) => {
 
                         // 每个文件上传成功后,处理相关的事情
                         // 其中 info 是文件上传成功后，服务端返回的json，形式如
@@ -66,6 +76,7 @@
                             name:response.key
                         })
                         window.eventHub.emit('afterUploading')
+                        this.model.data.statues = 'open'
                     },
                     'Error': function (up, err, errTip) {
                         //上传出错时,处理相关的事情
