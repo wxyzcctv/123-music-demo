@@ -1,3 +1,4 @@
+
 {
     let view = {
         el: '#songList-container',
@@ -8,8 +9,14 @@
         render(data){
             let $el = $(this.el)
             $el.html(this.template)
-            let {songs} = data
-            let liList = songs.map((song)=>$('<li></li>').text(song.name).attr('song-data-id',song.id))
+            let {songs,selectSongId} = data
+            let liList = songs.map((song)=>{
+                let $li = $('<li></li>').text(song.name).attr('song-data-id',song.id)
+                if(song.id === selectSongId){
+                    $li.addClass('active')
+                }
+                return $li
+            })
             //以上内容是创建一个li，并设置这个li的text的内容
             $el.find('ul').empty()//首先就是清空里面的ul
             liList.map((domLi)=>{ //遍历liList中的数组，找到其中的domLi，然后将其放到ul中
@@ -19,15 +26,11 @@
         clearActive(){
             $(this.el).find('.active').removeClass('active')
         },
-        activeIterm(li){
-            let $li = $(li)
-            $li.addClass('active')
-            .siblings('.active').removeClass('active')
-        }
     }
     let model = {
         data: {
-            songs: [ ]
+            songs: [ ],
+            selectSongId: undefined,
         },
         find(){
             var query = new AV.Query('Song')
@@ -56,6 +59,15 @@
             window.eventHub.on('new',()=>{
                 this.view.clearActive()
             })
+            window.eventHub.on('updata',(song)=>{
+                let songs = this.model.data.songs
+                for(let i = 0;i<songs.length;i++){
+                    if(songs[i].id === song.id){
+                        Object.assign(songs[i], song)
+                    }
+                }
+                this.view.render(this.model.data)
+            })
             
         },
         getAllSongs(){
@@ -65,8 +77,11 @@
         },
         bindEvents(){
             $(this.view.el).on('click','li',(e)=>{
-                this.view.activeIterm(e.currentTarget)
                 let songID = e.currentTarget.getAttribute('song-data-id')
+
+                this.model.data.selectSongId = songID
+                this.view.render(this.model.data)
+
                 let songs = this.model.data.songs
                 let data 
                 for (let i = 0; i < songs.length; i++) {

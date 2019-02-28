@@ -67,6 +67,16 @@
                 //如果失败就打印出这个错误来
               console.error(error);
             });
+        },
+        updata(data){
+            var song = AV.Object.createWithoutData('Song', this.data.id)
+            song.set('name', data.name)
+            song.set('singer', data.singer)
+            song.set('url', data.url)
+            return song.save().then((response)=>{
+                Object.assign(this.data , data)
+                return response
+            })
         }
     }
     let controller ={
@@ -75,9 +85,9 @@
             this.view.init()
             this.model =model
             this.view.render(this.model.data)
-            this.bindEvents()
             window.eventHub.on('select',(data)=>{
-                this.view.render(data)
+                this.model.data = data
+                this.view.render(this.model.data)
             })
             window.eventHub.on('new',(data)=>{          
                 if(this.model.data.id){
@@ -89,25 +99,44 @@
                 }
                 this.view.render(this.model.data)
             })
+            this.bindEvents()
+        },
+        create(){
+            let needs = 'name singer url'.split(' ')
+            let data = {}
+            needs.map((string)=>{
+                data[string] = this.view.$el.find(`[name="${string}"]`).val()
+            })//找到对应的元素对应的值，这个元素是在view中传入的template中进行寻找的
+            this.model.create(data)
+            .then(()=>{//model成功的创建数据之后就进行render的渲染，这个渲染使用最新得到的数据进行渲染
+                //本来传入的数据就是最新的数据，所以在渲染的时候就页面的内容是保持不变的。
+                this.view.reset()//现在就是成功之后将输入框中的内容清空了
+                let string = JSON.stringify(this.model.data)
+                let object = JSON.parse(string)
+                //这里进行的就是深拷贝
+                window.eventHub.emit('create',object)
+            })
+        },
+        updata(){
+            let needs = 'name singer url'.split(' ')
+            let data = {}
+            needs.map((string)=>{
+                data[string] = this.view.$el.find(`[name="${string}"]`).val()
+            })
+            this.model.updata(data)
+            .then(()=>{
+                window.eventHub.emit('updata',JSON.parse(JSON.stringify(this.model.data)))
+            })
         },
         bindEvents(){
             this.view.$el.on('submit','form',(e)=>{
                 //当提交form的时候，进行的是事件委托
                 e.preventDefault()
-                let needs = 'name singer url'.split(' ')
-                let data = {}
-                needs.map((string)=>{
-                    data[string] = this.view.$el.find(`[name="${string}"]`).val()
-                })//找到对应的元素对应的值，这个元素是在view中传入的template中进行寻找的
-                this.model.create(data)
-                .then(()=>{//model成功的创建数据之后就进行render的渲染，这个渲染使用最新得到的数据进行渲染
-                    //本来传入的数据就是最新的数据，所以在渲染的时候就页面的内容是保持不变的。
-                    this.view.reset()//现在就是成功之后将输入框中的内容清空了
-                    let string = JSON.stringify(this.model.data)
-                    let object = JSON.parse(string)
-                    //这里进行的就是深拷贝
-                    window.eventHub.emit('create',object)
-                })
+                if(this.model.data.id){
+                    this.updata()
+                }else{
+                    this.create()
+                }
             })
         }
     }
