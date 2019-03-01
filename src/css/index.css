@@ -17,16 +17,16 @@ body{font:14px/1.5 Helvetica,sans-serif;}
   overflow: hidden;
 }
 body{
-    font-size: 15px;
-    background: white;
-  }
-  .sectionTitle{
-    border-left: 2px solid #D43C33;
-    font-size: 17px;
-    line-height: 1;
-    padding-left: 8px;
-    margin: 20px 0 8px;
-  }
+  font-size: 15px;
+  background: white;
+}
+.sectionTitle{
+  border-left: 2px solid #D43C33;
+  font-size: 17px;
+  line-height: 1;
+  padding-left: 8px;
+  margin: 20px 0 8px;
+}
   .sticky{
     position: fixed;
     top: 0;
