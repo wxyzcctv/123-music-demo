@@ -8,8 +8,11 @@
             this.$el.css('background',`url(${data.song.cover}) center center`)
             this.$el.find('img.cover').attr('src',data.song.cover)
             if(this.$el.find('audio').attr('src') !== data.song.url){
-                this.$el.find('audio').attr('src',data.song.url)
+                let audio = this.$el.find('audio').attr('src',data.song.url).get(0)
                 //这里面是会进行从新加载音乐的链接的。
+                audio.onended = ()=>{
+                    window.eventHub.emit('songEnd')
+                }
             }//这个判断是为了保证暂停再次播放的时候不会从新加载以便。
             if(data.statues === 'playing'){
                 this.$el.find('.disc-container').addClass('playing')
@@ -64,6 +67,10 @@
                 this.model.data.statues = "paused"
                 this.view.render(this.model.data)
                 this.view.pause()
+            })
+            window.eventHub.on('songEnd',()=>{
+                this.model.data.statues = 'paused'
+                this.view.render(this.model.data)
             })
         },
         gitId(){
