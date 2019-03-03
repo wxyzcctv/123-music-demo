@@ -1,23 +1,27 @@
 {
     let view = {
         el: '#app',
-        template: `
-            <audio controls src={{url}}></audio>
-            <div>
-                <button class="play">播放</button>
-                <button class="pause">暂停</button>
-            </div>
-        `,
+        init(){
+            this.$el = $(this.el)
+        },
         render(data){
-            $(this.el).html(this.template.replace('{{url}}',data.url))
+            this.$el.css('background',`url(${data.song.cover}) center center`)
+            this.$el.find('img.cover').attr('src',data.song.cover)
+            if(this.$el.find('audio').attr('src') !== data.song.url){
+                this.$el.find('audio').attr('src',data.song.url)
+                //这里面是会进行从新加载音乐的链接的。
+            }//这个判断是为了保证暂停再次播放的时候不会从新加载以便。
+            if(data.statues === 'playing'){
+                this.$el.find('.disc-container').addClass('playing')
+            }else{
+                this.$el.find('.disc-container').removeClass('playing')
+            }
         },
         play(){
-            let audio = $(this.el).find('audio')[0]
-            audio.play()
+            this.$el.find('audio')[0].play()
         },
         pause(){
-            let audio = $(this.el).find('audio')[0]
-            audio.pause()
+            this.$el.find('audio')[0].pause()
         }
     }
     let model = {
@@ -26,8 +30,10 @@
                 id: '',
                 url: '',
                 name: '',
+                cover: '',
                 singer: '',  
-            }
+            },
+            statues : 'paused',
         },
         get(id){
             var query = new AV.Query('Song')
@@ -40,18 +46,23 @@
     let controller = {
         init(view,model){
             this.view = view
+            this.view.init()
             this.model = model
             let id = this.gitId()
             this.model.get(id).then(()=>{
-                this.view.render(this.model.data.song)
+                this.view.render(this.model.data)
             })
             this.bindEvents()
         },
         bindEvents(){
-            $(this.view.el).on('click','.play',()=>{
+            $(this.view.el).on('click','.icon-play',()=>{
+                this.model.data.statues = "playing"
+                this.view.render(this.model.data)
                 this.view.play()
             })
-            $(this.view.el).on('click','.pause',()=>{
+            $(this.view.el).on('click','.icon-pause',()=>{
+                this.model.data.statues = "paused"
+                this.view.render(this.model.data)
                 this.view.pause()
             })
         },

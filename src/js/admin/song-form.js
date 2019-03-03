@@ -24,6 +24,12 @@
                 </label>
                 <input name="url" type="text" value="__url__">
             </div>
+            <div class="row">
+                <label>
+                背景
+                </label>
+                <input name="cover" type="text" value="__cover__">
+            </div>
             <div class="row actions">
                 <button type="submit">保存</button>
             </div>
@@ -31,7 +37,7 @@
         `, //容器中的内容
         render(data = {}){
             //如果用户没有传data或者穿的data是没有定义的，那么就令data为空，这是ES6的语法
-            let placeholders = ['name','singer','url','id']
+            let placeholders = ['name','singer','url','cover','id']
             let html = this.template
             placeholders.map((string)=>{
                 //这里的map函数是为了能进行palceholders的遍历
@@ -50,7 +56,7 @@
     }
     let model = {
         data:{
-            name: '',singer: '',url: '',id: ''
+            name: '',singer: '',url: '',id: '',cover: ''
         },
         create(data){
             var Song = AV.Object.extend('Song');
@@ -58,6 +64,7 @@
             song.set('name',data.name);
             song.set('singer',data.singer);
             song.set('url',data.url);
+            song.set('cover',data.cover);
             return song.save().then((newSong)=>{
                 //如果成功了就得到newSong，然后将这个newSong打印出来
               console.log(newSong);
@@ -73,6 +80,7 @@
             song.set('name', data.name)
             song.set('singer', data.singer)
             song.set('url', data.url)
+            song.set('cover', data.cover)
             return song.save().then((response)=>{
                 Object.assign(this.data , data)
                 return response
@@ -92,7 +100,7 @@
             window.eventHub.on('new',(data)=>{          
                 if(this.model.data.id){
                     this.model.data = {
-                        name: '',singer: '',url: '',id: ''
+                        name: '',singer: '',url: '',id: '',cover: ''
                     }
                 }else{
                     Object.assign(this.model.data,data)
@@ -102,7 +110,7 @@
             this.bindEvents()
         },
         create(){
-            let needs = 'name singer url'.split(' ')
+            let needs = 'name singer url cover'.split(' ')
             let data = {}
             needs.map((string)=>{
                 data[string] = this.view.$el.find(`[name="${string}"]`).val()
@@ -118,7 +126,7 @@
             })
         },
         updata(){
-            let needs = 'name singer url'.split(' ')
+            let needs = 'name singer url cover'.split(' ')
             let data = {}
             needs.map((string)=>{
                 data[string] = this.view.$el.find(`[name="${string}"]`).val()
