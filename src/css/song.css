@@ -64,7 +64,8 @@
 }
 .song-description p.active{
     color: red;
-    font: 16px Arial;
+    font-size: 18px ;
+    /* font-family:Arial; */
 }
 
 .page > .links{
