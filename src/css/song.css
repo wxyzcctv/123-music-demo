@@ -42,7 +42,7 @@
 
 .song-description{
 	flex-grow: 1;
-	color: #AEABAC;
+    color: #AEABAC;
 	text-align: center;
 	line-height: 2;
 	margin-top: 20px;
@@ -63,7 +63,8 @@
 	overflow: hidden;
 }
 .song-description p.active{
-	color: white;
+    color: red;
+    font: 16px Arial;
 }
 
 .page > .links{
@@ -86,5 +87,6 @@
 }
 .page > .links > a.main{
 	background: #D43B32;
-	color: white;
+    color: white;
+    
 }

@@ -26,9 +26,15 @@
             </div>
             <div class="row">
                 <label>
-                背景
+                封面
                 </label>
                 <input name="cover" type="text" value="__cover__">
+            </div>
+            <div class="row">
+                <label>
+                歌词
+                </label>
+                <textarea cols=100 rows=20 name="lyrics">__lyrics__</textarea>
             </div>
             <div class="row actions">
                 <button type="submit">保存</button>
@@ -37,7 +43,7 @@
         `, //容器中的内容
         render(data = {}){
             //如果用户没有传data或者穿的data是没有定义的，那么就令data为空，这是ES6的语法
-            let placeholders = ['name','singer','url','cover','id']
+            let placeholders = ['name','singer','url','cover','id','lyrics']
             let html = this.template
             placeholders.map((string)=>{
                 //这里的map函数是为了能进行palceholders的遍历
@@ -56,7 +62,7 @@
     }
     let model = {
         data:{
-            name: '',singer: '',url: '',id: '',cover: ''
+            name: '',singer: '',url: '',id: '',cover: '',lyrics:''
         },
         create(data){
             var Song = AV.Object.extend('Song');
@@ -65,6 +71,7 @@
             song.set('singer',data.singer);
             song.set('url',data.url);
             song.set('cover',data.cover);
+            song.set('lyrics',data.lyrics);
             return song.save().then((newSong)=>{
                 //如果成功了就得到newSong，然后将这个newSong打印出来
               console.log(newSong);
@@ -81,6 +88,7 @@
             song.set('singer', data.singer)
             song.set('url', data.url)
             song.set('cover', data.cover)
+            song.set('lyrics', data.lyrics)
             return song.save().then((response)=>{
                 Object.assign(this.data , data)
                 return response
@@ -100,7 +108,7 @@
             window.eventHub.on('new',(data)=>{          
                 if(this.model.data.id){
                     this.model.data = {
-                        name: '',singer: '',url: '',id: '',cover: ''
+                        name: '',singer: '',url: '',id: '',cover: '',lyrics: ''
                     }
                 }else{
                     Object.assign(this.model.data,data)
@@ -110,7 +118,7 @@
             this.bindEvents()
         },
         create(){
-            let needs = 'name singer url cover'.split(' ')
+            let needs = 'name singer url cover lyrics'.split(' ')
             let data = {}
             needs.map((string)=>{
                 data[string] = this.view.$el.find(`[name="${string}"]`).val()
@@ -126,7 +134,7 @@
             })
         },
         updata(){
-            let needs = 'name singer url cover'.split(' ')
+            let needs = 'name singer url cover lyrics'.split(' ')
             let data = {}
             needs.map((string)=>{
                 data[string] = this.view.$el.find(`[name="${string}"]`).val()
