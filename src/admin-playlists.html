@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>管理歌单页面</title>
+</head>
+
+<body>
+    <div class="playlistForm-wrapper">
+        <h1>创建歌单</h1>
+        <form class="playlistForm">
+            <div class="rom">
+                <label>歌单名<input type="text" name="name"></label>
+            </div>
+            <div class="rom">
+                <label style="margin-left:1em">简介
+                    <textarea name="summary">
+                    </textarea>
+                </label>
+            </div>
+            <div class="rom">
+                <button type="submit">创建</button>
+            </div>
+        </form>
+    </div>
+    <script src="../node_modules/leancloud-storage/dist/av-min.js"></script>
+    <script src="./js/initializers/av.js"></script>
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="./js/admin/event-hub.js"></script>
+    <script>
+        {
+            let view = {
+                el: '.playlistForm-wrapper',
+                init() {
+                    this.$el = $(this.el)
+                    this.$form = this.$el.find('form')
+                }
+            }
+            let model = {
+                create(data) {
+                    var Playlist = AV.Object.extend('Playlist');
+                    var playlist = new Playlist();
+                    playlist.set('name', '测试标题');
+                    playlist.set('summary', '测试简介');
+                    playlist.save().then((newPlaylist) => {
+                        console.log(newPlaylist);
+                    }, (error) => {
+                        console.error(error);
+                    });
+
+                }
+            }
+            let controller = {
+                init(view, model) {
+                    this.view = view
+                    this.view.init()
+                    this.model = model
+                    this.bindEvents()
+                },
+                bindEvents() {
+                    this.view.$el.on('submit', 'form', (e) => {
+                        e.preventDefault()
+                        let form = this.view.$form[0]
+                        console.log(form.name.value)
+                        console.log(form.summary.value.trim())
+                        let key = ['name', 'summary']
+                        let data = {}
+                        key.reduce((pre, item) => {
+                            pre[item] = form[item].value
+                            return pre
+                        }, data)
+                        this.model.create(data)
+                    })
+                }
+            }
+            controller.init(view, model)
+        }
+
+        //以下就是实现数据关联的例子，主要是将song中的数据与playlist中的数据进行关联
+        // var Song = AV.Object.extend('Song');
+        // var song = new Song();
+        // song.set('name', '测试标题');
+        // song.set('summary', '测试简介');
+
+        // var Playlist = AV.Object.extend('Playlist');
+        // var playlist = new Playlist();
+        // playlist.set('name', '测试标题');
+        // playlist.set('summary', '测试简介');
+
+        // song.set('dependent', playlist);
+        // song.save().then((newSong) => {
+        //     console.log(newSong);
+        // }, (error) => {
+        //     console.error(error);
+        // });
+    </script>
+</body>
+
+</html>
